@@ -6,7 +6,6 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RoomController;
-use App\Http\Controllers\StudentController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -19,11 +18,21 @@ Route::get('/', function () {
 
 Route::get('products', [ProductController::class, 'index']); // แสดงรายการสินค้าจาก ProductController
 
-Route::get('/rooms', [RoomController::class, 'index'])->middleware(['auth', 'verified'])->name('Rooms/Index');
+Route::get('/rooms', [RoomController::class, 'index'])->middleware(['auth', 'verified'])->name("rooms.index");
 
-Route::get('/student', [StudentController::class, 'index'])->middleware(['auth', 'verified'])->name('Student/Index');
+Route::get('/rooms/create', [RoomController::class, 'create'])->middleware(['auth', 'verified'])->name('rooms.create');
 
-Route::get('/dashboard', function () {
+Route::post('/bookings', [RoomController::class, 'store']);
+
+Route::get('/rooms/{id}/edit', [RoomController::class, 'edit'])->name('rooms.edit');
+
+Route::put('/rooms/{id}', [RoomController::class, 'update'])->name('rooms.update');
+
+Route::delete('/rooms/{id}', [RoomController::class, 'destroy'])->name('rooms.destroy');
+
+Route::get('/rooms/select', [RoomController::class, 'select'])->name('rooms.select');
+
+Route::get('/dashboard', function () {  
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 

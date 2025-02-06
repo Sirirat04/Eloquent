@@ -14,7 +14,8 @@ return new class extends Migration
         if (!Schema::hasTable('order_details')) {
             Schema::create('order_details', function (Blueprint $table) {
                 $table->id();
-                $table->foreignId('order_id')->constrained()->cascadeOnDelete();
+                $table->unsignedBigInteger('order_id');
+                $table->foreign('order_id')->references('id')->on('orders')->onDelete('cascade');
                 $table->foreignId('product_id')->constrained()->cascadeOnDelete();
                 $table->integer('quantity');
                 $table->decimal('subtotal', 8, 2);

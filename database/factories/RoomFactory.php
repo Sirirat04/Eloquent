@@ -19,10 +19,10 @@ class RoomFactory extends Factory
         return [
             // การสุ่ม room_type_id จากประเภทห้องที่มีอยู่ หรือสร้าง room_type ใหม่หากไม่มี
             'room_type_id' => RoomType::inRandomOrder()->first()->id ?? RoomType::factory(),
-            // การสุ่มหมายเลขห้องที่เป็นคำหรือสตริง
-            'room_number' => $this->faker->word(),
+            // การสุ่มหมายเลขห้องที่เป็นตัวเลข เช่น 100 ถึง 999
+            'room_number' => $this->faker->numberBetween(100, 999),
             // การสุ่มสถานะของห้อง (สามารถเป็น available, booked, หรือ maintenance)
-            'status' => $this->faker->randomElement(['available', 'booked', 'maintenance']),
+            'status' => $this->faker->randomElement(['not_reserved', 'reserved']),
         ];
     }
 }

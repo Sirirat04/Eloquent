@@ -18,4 +18,3 @@ class RoomSeeder extends Seeder
         Booking::factory(30)->create();  // สร้าง Booking 30 รายการ
     }
 }
-

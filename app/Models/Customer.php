@@ -11,6 +11,10 @@ class Customer extends Model
 
     protected $fillable = ['name', 'email', 'phone', 'address'];
 
+    protected $attributes = [
+        'email' => '', // Set default value for email
+    ];
+
     public function orders()
     {
         return $this->hasMany(Order::class);
