@@ -14,15 +14,15 @@ export default function Index() {
 
     return (
         <AuthenticatedLayout>
-            <div className="container mx-auto p-8 bg-gradient-to-r from-blue-50 via-white to-blue-50 shadow-lg rounded-lg">
-                <h2 className="text-2xl font-bold text-center mb-6 text-blue-700">รายการการจองที่พัก</h2>
+            <div className="container mx-auto p-8 bg-gradient-to-r from-pink-50 via-white to-pink-50 shadow-lg rounded-lg">
+                <h2 className="text-2xl font-bold text-center mb-6 text-pink-700">รายการการจองที่พัก</h2>
 
                 {/* ช่องค้นหา */}
                 <div className="flex justify-center mb-6">
                     <input
                         type="text"
                         placeholder="ค้นหาด้วยชื่อลูกค้า หมายเลขโทรศัพท์ หรือหมายเลขห้อง"
-                        className="border px-4 py-2 w-1/2 rounded shadow focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="border px-4 py-2 w-1/2 rounded shadow focus:outline-none focus:ring-2 focus:ring-pink-500"
                         value={searchTerm}
                         onChange={e => setSearchTerm(e.target.value)}
                     />
@@ -31,7 +31,7 @@ export default function Index() {
                 {filteredBookings.length > 0 ? (
                     <table className="min-w-full bg-white shadow-lg rounded-lg overflow-hidden">
                         <thead>
-                            <tr className="bg-gradient-to-r from-green-500 to-teal-500 text-white">
+                            <tr className="bg-gradient-to-r from-pink-500 to-pink-700 text-white">
                                 <th className="py-3 px-4 text-left font-semibold">ชื่อของลูกค้า</th>
                                 <th className="py-3 px-4 text-left font-semibold">หมายเลขโทรศัพท์</th>
                                 <th className="py-3 px-4 text-left font-semibold">หมายเลขห้อง</th>
@@ -43,7 +43,7 @@ export default function Index() {
                         </thead>
                         <tbody>
                             {filteredBookings.map((booking, index) => (
-                                <tr key={index} className="border-b hover:bg-gray-100 odd:bg-gray-50">
+                                <tr key={index} className="border-b hover:bg-pink-100 odd:bg-pink-50">
                                     <td className="py-3 px-4">{booking.customer_name ?? "ไม่ระบุ"}</td>
                                     <td className="py-3 px-4">{booking.customer_phone ?? "ไม่ระบุ"}</td>
                                     <td className="py-3 px-4">{booking.room_number ?? "ไม่ระบุ"}</td>
@@ -54,13 +54,13 @@ export default function Index() {
                                         <div className="flex space-x-2">
                                             <Link
                                                 href={`/rooms/${booking.id}/edit`}
-                                                className="bg-yellow-500 text-white px-4 py-1 rounded-2xl shadow hover:bg-yellow-600"
+                                                className="bg-pink-500 text-white px-4 py-1 rounded-2xl shadow hover:bg-pink-600"
                                             >
                                                 แก้ไข
                                             </Link>
                                             <button
                                                 onClick={() => handleDelete(booking.id)}
-                                                className="bg-red-500 text-white px-4 py-1 rounded-2xl shadow hover:bg-red-600"
+                                                className="bg-pink-700 text-white px-4 py-1 rounded-2xl shadow hover:bg-pink-800"
                                             >
                                                 ลบ
                                             </button>

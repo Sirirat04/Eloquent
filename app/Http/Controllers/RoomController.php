@@ -41,6 +41,7 @@ class RoomController extends Controller
         $validated = $request->validate([
             'customer_name' => 'required|string|max:255',
             'customer_phone' => 'required|string|max:255',
+            'customer_email' => 'required|string|email|max:255', // Ensure email is not empty
             'room_id' => 'required|exists:rooms,id',
             'check_in_date' => 'required|date|after_or_equal:today',
             'check_out_date' => 'required|date|after:check_in_date',
@@ -49,7 +50,10 @@ class RoomController extends Controller
         DB::transaction(function () use ($validated) {
             $customer = Customer::firstOrCreate(
                 ['phone' => $validated['customer_phone']],
-                ['name' => $validated['customer_name']]
+                [
+                    'name' => $validated['customer_name'],
+                    'email' => $validated['customer_email'], // Ensure email is set
+                ]
             );
 
             $room = Room::findOrFail($validated['room_id']);

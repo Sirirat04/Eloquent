@@ -1,4 +1,4 @@
-import { useForm } from '@inertiajs/react';
+import { useForm, router } from '@inertiajs/react'; // Ensure router is imported
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import Swal from 'sweetalert2';
 
@@ -6,6 +6,7 @@ export default function Create({ rooms }) {
     const { data, setData, post, errors } = useForm({
         customer_name: '',
         customer_phone: '',
+        customer_email: '', // Add customer_email field
         room_id: '',
         check_in_date: '',
         check_out_date: '',
@@ -14,7 +15,7 @@ export default function Create({ rooms }) {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        if (!data.customer_name || !data.customer_phone) {
+        if (!data.customer_name || !data.customer_phone || !data.customer_email) { // Check customer_email
             Swal.fire({
                 icon: 'error',
                 title: 'ข้อมูลไม่ครบถ้วน',
@@ -52,20 +53,26 @@ export default function Create({ rooms }) {
             return;
         }
 
+        console.log('Submitting booking data:', data); // Debugging log
+
         post('/bookings', {
             ...data,
             status: 'reserved', // Set the status to 'reserved'
         }, {
             onSuccess: () => {
+                console.log('onSuccess triggered:', response); // ตรวจสอบคำตอบที่ได้รับจากเซิร์ฟเวอร์
                 Swal.fire({
                     icon: 'success',
                     title: 'การจองสำเร็จ',
                     text: 'การจองของคุณถูกบันทึกแล้ว',
-                    timer: 3000,
-                    showConfirmButton: false,
+                    showConfirmButton: true,
+                }).then(() => {
+                    console.log('Redirecting to rooms index'); // Debugging log
+                    router.get('/rooms'); // Redirect หลังจากแจ้งเตือนเสร็จ
                 });
             },
-            onError: () => {
+            onError: (error) => {
+                console.error('Error creating booking:', error); // Debugging log
                 Swal.fire({
                     icon: 'error',
                     title: 'เกิดข้อผิดพลาด',
@@ -79,8 +86,8 @@ export default function Create({ rooms }) {
 
     return (
         <AuthenticatedLayout>
-            <div className="p-8 bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg shadow-lg max-w-4xl mx-auto">
-                <h1 className="text-3xl font-bold text-center text-blue-700 mb-6">Create Booking</h1>
+            <div className="p-8 bg-gradient-to-r from-pink-50 to-pink-100 rounded-lg shadow-lg max-w-4xl mx-auto">
+                <h1 className="text-3xl font-bold text-center text-pink-700 mb-6">Create Booking</h1>
 
                 <form onSubmit={handleSubmit} className="space-y-6">
                     <div>
@@ -89,7 +96,7 @@ export default function Create({ rooms }) {
                             type="text"
                             value={data.customer_name}
                             onChange={(e) => setData('customer_name', e.target.value)}
-                            className="border p-3 w-full rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                            className="border p-3 w-full rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-pink-400"
                         />
                         {errors.customer_name && <div className="text-red-500 mt-1">{errors.customer_name}</div>}
                     </div>
@@ -100,9 +107,20 @@ export default function Create({ rooms }) {
                             type="text"
                             value={data.customer_phone}
                             onChange={(e) => setData('customer_phone', e.target.value)}
-                            className="border p-3 w-full rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                            className="border p-3 w-full rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-pink-400"
                         />
                         {errors.customer_phone && <div className="text-red-500 mt-1">{errors.customer_phone}</div>}
+                    </div>
+
+                    <div>
+                        <label className="block mb-2 text-lg font-medium text-gray-700">Customer Email</label>
+                        <input
+                            type="email"
+                            value={data.customer_email}
+                            onChange={(e) => setData('customer_email', e.target.value)}
+                            className="border p-3 w-full rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-pink-400"
+                        />
+                        {errors.customer_email && <div className="text-red-500 mt-1">{errors.customer_email}</div>}
                     </div>
 
                     <div>
@@ -111,7 +129,7 @@ export default function Create({ rooms }) {
                             <select
                                 value={data.room_id}
                                 onChange={(e) => setData('room_id', e.target.value)}
-                                className="border p-3 w-full rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                className="border p-3 w-full rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-pink-400"
                             >
                                 <option value="">Please select a room</option>
                                 {availableRooms.map((room) => (
@@ -133,7 +151,7 @@ export default function Create({ rooms }) {
                             value={data.check_in_date}
                             min={new Date().toISOString().split('T')[0]}
                             onChange={(e) => setData('check_in_date', e.target.value)}
-                            className="border p-3 w-full rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                            className="border p-3 w-full rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-pink-400"
                         />
                         {errors.check_in_date && <div className="text-red-500 mt-1">{errors.check_in_date}</div>}
                     </div>
@@ -145,7 +163,7 @@ export default function Create({ rooms }) {
                             value={data.check_out_date}
                             min={data.check_in_date || new Date().toISOString().split('T')[0]}
                             onChange={(e) => setData('check_out_date', e.target.value)}
-                            className="border p-3 w-full rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                            className="border p-3 w-full rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-pink-400"
                         />
                         {errors.check_out_date && <div className="text-red-500 mt-1">{errors.check_out_date}</div>}
                     </div>
@@ -154,8 +172,8 @@ export default function Create({ rooms }) {
                         type="submit"
                         disabled={availableRooms.length === 0}
                         className={`p-3 w-full rounded-lg shadow-lg text-lg font-semibold transition ${availableRooms.length > 0
-                                ? 'bg-blue-600 text-white hover:bg-blue-700'
-                                : 'bg-gray-400 text-white cursor-not-allowed'
+                            ? 'bg-pink-600 text-white hover:bg-pink-700'
+                            : 'bg-gray-400 text-white cursor-not-allowed'
                             }`}
                     >
                         Submit
