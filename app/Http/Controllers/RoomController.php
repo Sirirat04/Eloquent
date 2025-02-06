@@ -41,39 +41,41 @@ class RoomController extends Controller
         $validated = $request->validate([
             'customer_name' => 'required|string|max:255',
             'customer_phone' => 'required|string|max:255',
-            'customer_email' => 'required|string|email|max:255', // Ensure email is not empty
+            'customer_email' => 'required|string|email|max:255', 
             'room_id' => 'required|exists:rooms,id',
             'check_in_date' => 'required|date|after_or_equal:today',
             'check_out_date' => 'required|date|after:check_in_date',
         ]);
-
+    
         DB::transaction(function () use ($validated) {
             $customer = Customer::firstOrCreate(
                 ['phone' => $validated['customer_phone']],
                 [
                     'name' => $validated['customer_name'],
-                    'email' => $validated['customer_email'], // Ensure email is set
+                    'email' => $validated['customer_email'], 
                 ]
             );
-
+    
             $room = Room::findOrFail($validated['room_id']);
             if ($room->status !== 'not_reserved') {
                 throw new \Exception('ห้องนี้ถูกจองแล้ว');
             }
-
+    
             Booking::create([
                 'customer_id' => $customer->id,
                 'room_id' => $validated['room_id'],
                 'check_in_date' => $validated['check_in_date'],
                 'check_out_date' => $validated['check_out_date'],
             ]);
-
+    
             $room->update(['status' => 'reserved']);
         });
-
+    
+        // ส่งข้อความ success ผ่านกับ Inertia
         return redirect()->route('rooms.index')->with('success', 'การจองสำเร็จแล้ว');
     }
-
+    
+    
     public function edit($id)
     {
         $booking = Booking::with('customer', 'room')->findOrFail($id);

@@ -4,7 +4,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import Swal from 'sweetalert2'; // Import SweetAlert2
 
 export default function Index() {
-    const { bookings = [] } = usePage().props;
+    const { bookings = [], flash } = usePage().props; // ดึงข้อมูล flash message ที่ส่งจาก controller
     const [searchTerm, setSearchTerm] = useState('');
 
     const filteredBookings = bookings.filter(booking =>
@@ -27,6 +27,13 @@ export default function Index() {
                         onChange={e => setSearchTerm(e.target.value)}
                     />
                 </div>
+
+                {/* แสดงข้อความ success หากมี */}
+                {flash && flash.success && (
+                    <div className="alert alert-success mb-6">
+                        {flash.success}
+                    </div>
+                )}
 
                 {filteredBookings.length > 0 ? (
                     <table className="min-w-full bg-white shadow-lg rounded-lg overflow-hidden">

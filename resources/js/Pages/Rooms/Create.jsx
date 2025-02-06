@@ -59,26 +59,28 @@ export default function Create({ rooms }) {
             ...data,
             status: 'reserved', // Set the status to 'reserved'
         }, {
-            onSuccess: () => {
+            onSuccess: (response) => {
                 console.log('onSuccess triggered:', response); // ตรวจสอบคำตอบที่ได้รับจากเซิร์ฟเวอร์
-                Swal.fire({
-                    icon: 'success',
-                    title: 'การจองสำเร็จ',
-                    text: 'การจองของคุณถูกบันทึกแล้ว',
-                    showConfirmButton: true,
-                }).then(() => {
-                    console.log('Redirecting to rooms index'); // Debugging log
-                    router.get('/rooms'); // Redirect หลังจากแจ้งเตือนเสร็จ
-                });
+                if (response && response.data) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'การจองสำเร็จ',
+                        text: 'การจองของคุณถูกบันทึกแล้ว',
+                        showConfirmButton: true,
+                    }).then(() => {
+                        console.log('Redirecting to rooms index');
+                        router.get('/rooms'); // เปลี่ยนหน้าไปที่หน้าห้อง
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'เกิดข้อผิดพลาด',
+                        text: 'ไม่สามารถบันทึกการจองได้ กรุณาลองใหม่อีกครั้ง',
+                    });
+                }
             },
-            onError: (error) => {
-                console.error('Error creating booking:', error); // Debugging log
-                Swal.fire({
-                    icon: 'error',
-                    title: 'เกิดข้อผิดพลาด',
-                    text: 'ไม่สามารถบันทึกการจองได้ กรุณาลองใหม่อีกครั้ง',
-                });
-            },
+            
+            
         });
     };
 
