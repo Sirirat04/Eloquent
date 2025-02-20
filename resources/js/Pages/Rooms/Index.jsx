@@ -21,7 +21,7 @@ export default function Index() {
                 <div className="flex justify-center mb-6">
                     <input
                         type="text"
-                        placeholder="ค้นหาด้วยชื่อลูกค้า หมายเลขโทรศัพท์ หรือหมายเลขห้อง"
+                        placeholder="ค้นหาด้วยชื่อลูกค้า หมายเลขโทรศัพท์"
                         className="border px-4 py-2 w-1/2 rounded shadow focus:outline-none focus:ring-2 focus:ring-pink-500"
                         value={searchTerm}
                         onChange={e => setSearchTerm(e.target.value)}

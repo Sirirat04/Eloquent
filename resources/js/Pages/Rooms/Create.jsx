@@ -55,34 +55,26 @@ export default function Create({ rooms }) {
 
         console.log('Submitting booking data:', data); // Debugging log
 
-        post('/bookings', {
-            ...data,
-            status: 'reserved', // Set the status to 'reserved'
-        }, {
-            onSuccess: (response) => {
-                console.log('onSuccess triggered:', response); // ตรวจสอบคำตอบที่ได้รับจากเซิร์ฟเวอร์
-                if (response && response.data) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'การจองสำเร็จ',
-                        text: 'การจองของคุณถูกบันทึกแล้ว',
-                        showConfirmButton: true,
-                    }).then(() => {
-                        console.log('Redirecting to rooms index');
-                        router.get('/rooms'); // เปลี่ยนหน้าไปที่หน้าห้อง
-                    });
-                } else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'เกิดข้อผิดพลาด',
-                        text: 'ไม่สามารถบันทึกการจองได้ กรุณาลองใหม่อีกครั้ง',
-                    });
-                }
+        post('/bookings', data, {
+            onSuccess: () => {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'การจองสำเร็จ',
+                    text: 'การจองของคุณถูกบันทึกแล้ว',
+                }).then(() => {
+                    router.get('/rooms');
+                });
             },
-            
-            
+            onError: (error) => {
+                console.error('Booking error:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'เกิดข้อผิดพลาด',
+                    text: 'ไม่สามารถบันทึกการจองได้ กรุณาลองใหม่อีกครั้ง',
+                });
+            },
         });
-    };
+         };
 
     const availableRooms = rooms.filter((room) => room.status === 'not_reserved');
 
